@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAX_CONTATOS 10
 
@@ -32,7 +33,7 @@ void le_contato (contato *c)
 int busca_Nome (contato **p_agenda, int len, char *busca)
 {
 	int i = len - 1;
-	while(i >= 0 && (*p_agenda+i)->nome != busca)
+	while(i >= 0 && strcmp((*p_agenda+i)->nome, busca))
 		i--;
 	
 	return i;
@@ -41,17 +42,18 @@ int busca_Nome (contato **p_agenda, int len, char *busca)
 int busca_Telefone (contato **p_agenda, int len, long busca)
 {
 	int i = len - 1;
+	
 	while(i >= 0 && (*p_agenda+i)->num != busca)
 		i--;
 	
 	return i;
 }
 
-void imprime_Agenda (contato **p_agenda, int len) 
+void imprime_Agenda (contato *agenda, int len) 
 {
 	printf ("===AGENDA===\n");
 	for (int i = 0; i < len; i++) {
-		imprime_contato(*p_agenda+i);
+		imprime_contato(&agenda[i]);
 		printf ("\n");
 	}
 }
@@ -64,13 +66,11 @@ int main ()
 	char nome_b[255];
 	long num_b;
 	
-	while (opcao)
-	{
-		
+	while (opcao) {		
 		printf("\n1 - Inserir contato\n2 - Busca por nome\n3 - Busca por telefone\n4 - Mostra agenda\n");
 		scanf("%d", &opcao);
-		
 		system("clear");
+		
 		switch (opcao) {
 			case 1:
 				printf("Entre com as informacoes do contato\n");
@@ -87,7 +87,7 @@ int main ()
 				if (resultado == -1) 
 					printf ("Nao encontrado.\n");				
 				else 
-					printf ("found");//imprime_contato(agenda[resultado]);
+					imprime_contato(&agenda[resultado]);
 				break;
 			
 			case 3:
@@ -99,11 +99,11 @@ int main ()
 				if (resultado == -1) 
 					printf("Nao encontrado.\n");				
 				else 
-					printf ("found");//imprime_contato(agenda[resultado]);
+					imprime_contato(&agenda[resultado]);
 				break;
 			
 			case 4:
-				imprime_Agenda(&p_agenda, len);
+				imprime_Agenda(p_agenda, len);
 				break;
 			
 			default:
