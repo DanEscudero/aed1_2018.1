@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 typedef struct caracter
 {
@@ -65,6 +66,15 @@ caracter* string_to_caracter (char *string, int len)
 	return v_car;
 }
 
+void setup_vetor (caracter *v_car, int len)
+{
+	for (int i = 0; i < len; i++) {
+		v_car[i].l1 = malloc(sizeof(char) * 1);
+		v_car[i].l2 = malloc(sizeof(char) * 4);
+		v_car[i].l3 = malloc(sizeof(char) * 4);
+	}
+}
+
 void print_caracter (caracter *v_car, int len)
 {		
 	for (int i = 0; i < len; i++)
@@ -86,7 +96,7 @@ int main ()
 	char *string;
 	caracter *v_car;
 	int len;
-	
+
 	string = hexa(n1);
 	len = length(string);
 	printf("%s\n", string);
@@ -100,123 +110,106 @@ int main ()
 
 void set_caracter (caracter * v_car, int len)
 {
-	caracter temp;
+	caracter *temp;
 	for (int i = 0; i < len; i++) {
-		temp = v_car[i];
-		switch ((int)temp.id) {
-			case 0:
-				temp.l1 = " _ ";
-				temp.l2 = "| |";
-				temp.l3 = "|_|";
+		temp = &v_car[i];
+		switch ((int)temp->id) {
+			case 48:
+				temp->l1 = " _ ";
+				temp->l2 = "| |";
+				temp->l3 = "|_|";
 				break;
 			
-			case 1:
-				temp.l1 = "   ";
-				temp.l2 = "  |";
-				temp.l3 = "  |";
+			case 49:
+				temp->l1 = "   ";
+				temp->l2 = "  |";
+				temp->l3 = "  |";
 				break;
 			
-			case 2:
-				temp.l1 = " _ ";
-				temp.l2 = " _|";
-				temp.l3 = "|_ ";
+			case 50:
+				temp->l1 = " _ ";
+				temp->l2 = " _|";
+				temp->l3 = "|_ ";
 				break;
 			
-			case 3:
-				temp.l1 = " _ ";
-				temp.l2 = " _|";
-				temp.l3 = " _|";
+			case 51:
+				temp->l1 = " _ ";
+				temp->l2 = " _|";
+				temp->l3 = " _|";
 				break;
 			
-			case 4:
-				temp.l1 = "   ";
-				temp.l2 = "|_|";
-				temp.l3 = "  |";
+			case 52:
+				temp->l1 = "   ";
+				temp->l2 = "|_|";
+				temp->l3 = "  |";
 				break;
 			
-			case 5:
-				temp.l1 = " _ ";
-				temp.l2 = "|_ ";
-				temp.l3 = " _|";
+			case 53:
+				temp->l1 = " _ ";
+				temp->l2 = "|_ ";
+				temp->l3 = " _|";
 				break;
 			
-			case 6:
-				temp.l1 = " _ ";
-				temp.l2 = "|_ ";
-				temp.l3 = "|_|";
+			case 54:
+				temp->l1 = " _ ";
+				temp->l2 = "|_ ";
+				temp->l3 = "|_|";
 				break;
 			
-			case 7:
-				temp.l1 = " _ ";
-				temp.l2 = "  |";
-				temp.l3 = "  |";
+			case 55:
+				temp->l1 = " _ ";
+				temp->l2 = "  |";
+				temp->l3 = "  |";
 				break;
 			
-			case 8:
-				temp.l1 = " _ ";
-				temp.l2 = "|_|";
-				temp.l3 = "|_|";
+			case 56:
+				temp->l1 = " _ ";
+				temp->l2 = "|_|";
+				temp->l3 = "|_|";
 				break;
 			
-			case 9:
-				temp.l1 = " _ ";
-				temp.l2 = "|_|";
-				temp.l3 = " _|";
+			case 57:
+				temp->l1 = " _ ";
+				temp->l2 = "|_|";
+				temp->l3 = " _|";
 				break;
 			
-			case 'A':
-				temp.l1 = " _ ";
-				temp.l2 = "|_|";
-				temp.l3 = "| |";
+			case 65:
+				temp->l1 = " _ ";
+				temp->l2 = "|_|";
+				temp->l3 = "| |";
 				break;
 			
-			case 'B':
-				temp.l1 = "   ";
-				temp.l2 = "|_ ";
-				temp.l3 = "|_|";
+			case 66:
+				temp->l1 = "   ";
+				temp->l2 = "|_ ";
+				temp->l3 = "|_|";
 				break;
 			
-			case 'C':
-				temp.l1 = " _ ";
-				temp.l2 = "|  ";
-				temp.l3 = "|_ ";
+			case 67:
+				temp->l1 = " _ ";
+				temp->l2 = "|  ";
+				temp->l3 = "|_ ";
 				break;
 			
-			case 'D':
-				temp.l1 = "   ";
-				temp.l2 = " _|";
-				temp.l3 = "|_|";
+			case 68:
+				temp->l1 = "   ";
+				temp->l2 = " _|";
+				temp->l3 = "|_|";
 				break;
 			
-			case 'E':
-				temp.l1 = " _ ";
-				temp.l2 = "|_ ";
-				temp.l3 = "|_ ";
+			case 69:
+				temp->l1 = " _ ";
+				temp->l2 = "|_ ";
+				temp->l3 = "|_ ";
 				break;
 			
-			case 'F':
-				temp.l1 = " _ ";
-				temp.l2 = "|_ ";
-				temp.l3 = "|  ";
+			case 70:
+				temp->l1 = " _ \0";
+				temp->l2 = "|_ ";
+				temp->l3 = "|  ";
 				break;
 			
 		}
-	}
-	printf ("v_car[0].l1: %s\n", v_car[0].l1);
-	printf ("v_car[0].l2: %s\n", v_car[0].l2);
-	printf ("v_car[0].l3: %s\n", v_car[0].l3);
+	}	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
