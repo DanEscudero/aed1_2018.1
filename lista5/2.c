@@ -22,12 +22,18 @@ line * createLine ()
 	return novo;
 }
 
-/*  */
+/* Libera Fila */
 void freeLine (line *fila)
 {
-	
+	node *aux;
+	for (aux = fila->list; fila->list; aux = fila->list) {
+		fila->list = fila->list->next;
+		free(aux);
+	}
+	free (fila);
 }
 
+/* Imprime a Fila */
 void printLine (line *fila)
 {
 	node *aux;
@@ -37,7 +43,7 @@ void printLine (line *fila)
 	printf("\n");
 }
 
-/*  */
+/* Enfileira data */
 int enfileira (line *fila, int data)
 {
 	node *novo = malloc(sizeof(node));
@@ -50,15 +56,14 @@ int enfileira (line *fila, int data)
 	return 1;
 }
 
-/*  */
+/* Retorna o ultimo elemento para *elem, retorna 1 se sucedido */
 int desenfileira (line *fila, int *elem)
 {
 	if (!fila->list) return 0;
-	node *aux = malloc(sizeof(node));
-	for(aux = fila->list; aux->next; aux = aux->next);
+	node *aux;
+	for(aux = fila->list; aux->next != NULL; aux = aux->next);
 	*elem = aux->data;
-	aux = NULL;
-		
+	
 	return 1;
 }
 
