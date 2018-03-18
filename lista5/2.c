@@ -7,8 +7,8 @@ typedef struct node {
 } node;
 
 typedef struct line {
-	node *list;
-	int len;
+	node *first;
+	node *last;
 } line;
 
 /* Cria fila e devolve o ponteiro caso ocorra a alocação */
@@ -17,7 +17,8 @@ line * createLine ()
 	line * novo = malloc(sizeof(line));
 	if (!novo) return 0;
 	
-	novo->len = 0;
+	novo->first = NULL;
+	novo->last = NULL;
 	
 	return novo;
 }
@@ -26,44 +27,40 @@ line * createLine ()
 void freeLine (line *fila)
 {
 	node *aux;
-	for (aux = fila->list; fila->list; aux = fila->list) {
-		fila->list = fila->list->next;
+	for (aux = fila->first; fila->first; aux = fila->first) {
+		fila->first = fila->first->next;
 		free(aux);
 	}
 	free (fila);
 }
 
-/* Imprime a Fila */
-void printLine (line *fila)
-{
-	node *aux;
-	printf("FILA: ");
-	for (aux = fila->list; aux; aux = aux->next)
-		printf ("%d  ", aux->data);
-	printf("\n");
-}
-
-/* Enfileira data */
+/* Enfileira data, retorna 1 se sucedido */
 int enfileira (line *fila, int data)
 {
 	node *novo = malloc(sizeof(node));
 	if(!novo) return 0;
 	
 	novo->data = data;
-	novo->next = fila->list;
-	fila->list = novo;
+	if (fila->first == NULL && fila->last == NULL) { //FILA VAZIA
+		fila->first = novo;
+		fila->last = novo;
+	}
+	else { //FILA NAO VAZIA
+		fila->last->next = novo;
+		fila->last = novo;
+	}
 	
 	return 1;
 }
 
-/* Retorna o ultimo elemento para *elem, retorna 1 se sucedido */
+/* Desenfileira para *elem, retorna 1 se sucedido */
 int desenfileira (line *fila, int *elem)
 {
-	if (!fila->list) return 0;
-	node *aux;
-	for(aux = fila->list; aux->next != NULL; aux = aux->next);
+	if (!fila->first) return 0;
+	node *aux = fila->first;
+	fila->first = fila->first->next;
 	*elem = aux->data;
-	
+	free(aux);
 	return 1;
 }
 
@@ -71,20 +68,21 @@ int main ()
 {
 	line *fila = createLine();
 	int a, b;
+	
 	enfileira(fila, 111);
 	enfileira(fila, 222);
 	enfileira(fila, 333);
 	enfileira(fila, 444);
 	enfileira(fila, 555);
 	
-	printLine(fila);
-	
-	a = desenfileira (fila, &b);
+	a = desenfileira(fila, &b);
 	printf("df: (%d) num: %d\n", a, b);
-	a = desenfileira (fila, &b);
+	a = desenfileira(fila, &b);
 	printf("df: (%d) num: %d\n", a, b);
-	a = desenfileira (fila, &b);
+	a = desenfileira(fila, &b);
 	printf("df: (%d) num: %d\n", a, b);
 	
+	freeLine(fila);
+	 
 	return 0;
 }
