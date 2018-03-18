@@ -42,7 +42,7 @@ char * hexa(unsigned long long int num)
 	int i = 0;
 	while (num) {
 		temp = num%16;
-		num/=16;
+		num /= 16;
 		
 		if (temp < 10) temp += 48;
 		else temp += 55;
@@ -61,8 +61,6 @@ caracter* string_to_caracter (char *string, int len)
 		temp = string[i];
 		v_car[i].id = temp;
 	}
-	/*printf("string: %d\n", string[0]);
-	printf("v_car[0].id: %d\n", v_car[0].id);*/
 	return v_car;
 }
 
@@ -92,10 +90,12 @@ void print_caracter (caracter *v_car, int len)
 
 int main ()
 {
-	unsigned long long int n1 = 11073303771280;
+	unsigned long long int n1;
 	char *string;
 	caracter *v_car;
 	int len;
+	
+	scanf ("%lld", &n1);
 
 	string = hexa(n1);
 	len = length(string);
