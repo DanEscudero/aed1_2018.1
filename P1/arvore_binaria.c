@@ -80,7 +80,7 @@ tree * removeTree (tree *arvore, int x)
 	else if (x > arvore->data)
 		arvore->right = removeTree(arvore->right, x);
 	
-	//Chega aqui quando o no avaliado eh o no que contem x
+	//Chega aqui quando arvore->data == x
 	else {
 		//caso 1: sem filhos
 		if (!arvore->left && !arvore->right) {
