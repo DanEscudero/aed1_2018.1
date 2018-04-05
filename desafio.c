@@ -44,6 +44,7 @@ void printBorders(matriz *m)
 	printf("\n");
 }
 
+/* INUTIL */
 /* Insere os nos de borda, com os paramtros (-1, NULL, NULL) */
 border * insertBorder (border *inicio)
 {
@@ -54,18 +55,53 @@ border * insertBorder (border *inicio)
 	
 	if (!inicio)
 		return novo;
-	else {
-		border *aux = inicio;
-		while(aux->next)
-			aux = aux->next;
-		aux->next = novo;
-		return inicio;
+	
+	border *aux = inicio;
+	while (aux->next)
+		aux = aux->next;
+	
+	aux->next = novo;
+	return inicio;
+}
+
+/* Verifica se x pertence a lista inicio (ordenada) 			*
+ * Retorna NULL caso nao pertenca, e o endereco caso pertenca 	*/
+border *pertence(border * inicio, int x)
+{
+	border *aux = inicio
+	while (aux && aux->index <= x) {
+		if (x == aux->indice) return aux;
+		aux = aux->next;
 	}
+	return NULL;
 }
 
 void insertElement (matriz* m, int lin, int col, int x)
 {
+	cell *novo = malloc(sizeof(cell));
+	novo->data = x;
+	novo->lin = lin;
+	novo->col = col;
+	novo->down = NULL;
+	novo->right = NULL;
 	
+	border *pertence_lin = pertence(m->lins, lin);
+	border *pertence_col = pertence(m->cols, col);
+	
+	//Checar se ja existe elemento naquela posicao
+	if (pertence_lin && pertence_col) {
+		//atualiza
+	}
+	//Nao existe linha e nem cluna do elemento
+	else if (!pertence_lin && !pertence_col) {
+		//cria lin e col
+	}
+	else if (pertence_lin && !pertence_col) {
+		//cria col
+	}
+	else if (!pertence_lin && pertence_col) {
+		//cria lin
+	}
 }
 
 int main ()
@@ -88,7 +124,7 @@ int main ()
 	//input de cada elemento
 	int lin, col, num;
 	
-	printf("INSERINDO BORDAS\n");
+	/*printf("INSERINDO BORDAS\n");
 	for (int i = 0; i < la; i++)
 		matrizA->lins = insertBorder(matrizA->lins);
 	
@@ -100,7 +136,7 @@ int main ()
 	
 	for (int i = 0; i < cb; i++)
 		matrizB->cols = insertBorder(matrizB->cols);
-	printf("BORDAS INSERIDAS\n");
+	printf("BORDAS INSERIDAS\n");*/
 	
 	printBorders(matrizA);
 	printBorders(matrizB);
