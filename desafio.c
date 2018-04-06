@@ -41,16 +41,16 @@ int acesso (matriz *m, int y, int x)
 	node *aux_lin = m->lins;
 	node *aux_col = m->cols;
 	
-	int line_counter = 0;
+	int line_counter = 1;
 	
 	if (!aux_lin || !aux_col) return 0;
 	
-	while (aux_lin->lin < y && aux_lin->down) {
+	while (aux_lin->down && aux_lin->down->lin < y) {
 		aux_lin = aux_lin->down;
 		line_counter++;
 	}
-	
-	while (aux_col->col < x && aux_col->right) {
+	//printf("lc: %d\n", line_counter);
+	while (aux_col->right && aux_col->right->col < x) {
 		aux_col = aux_col->right;
 	}
 	
@@ -64,7 +64,73 @@ int acesso (matriz *m, int y, int x)
 		return 0;
 }
 
-
+void insertElement (matriz *m, int lin, int col, int x)
+{
+	node *inserido = malloc(sizeof(node));
+	inserido->data = x;
+	inserido->lin = lin;
+	inserido->col = col;
+	inserido->down = NULL;
+	inserido->right = NULL;
+	
+	node *aux_lin = m->lins;
+	node *aux_col = m->cols;
+	
+	if (!aux_lin && !aux_col) {								//MATRIZ VAZIA
+		node *novo_lin = malloc(sizeof(node));
+		novo_lin->lin = lin;
+		novo_lin->right = inserido;
+		novo_lin->down = NULL;
+		m->lins = novo_lin;
+		
+		node *novo_col = malloc(sizeof(node));
+		novo_col->col = col;
+		novo_col->right = NULL;
+		novo_col->down = inserido;
+		m->cols = novo_col;
+	}
+	
+	else {													//MATRIZ JA TEM ALGUM ELEMENTO
+		printf("1\n");
+		while (aux_lin->down && aux_lin->down->lin < lin) {
+			printf("w\n");
+			aux_lin = aux_lin->down;
+		}
+		printf("2\n");
+		if (aux_lin->lin != lin) {							//aux->lin é menor que lin
+			printf("3\n");
+			node *novo_lin = malloc(sizeof(node));
+			novo_lin->lin = lin;
+			novo_lin->right = inserido;						//erro pode estar aqui
+			novo_lin->down = aux_lin->down;
+			aux_lin->down = novo_lin;
+			printf("4\n");
+		}
+		else {												//aux->lin é igual a lin	
+			//ja existe a borda, insere o elemento
+		}
+		
+		printf("5\n");
+		while (aux_col->right && aux_col->right->col < col) {
+			aux_col = aux_col->right;
+			printf("w\n");
+		}
+		printf("6\n");
+		if (aux_col->col != col) {							//aux->col é menor que col
+			printf("7\n");
+			node *novo_col = malloc(sizeof(node));
+			novo_col->col = col;
+			novo_col->down = inserido;
+			novo_col->right = aux_col->right;
+			aux_col->right = novo_col;
+			printf("8\n");
+		}
+		else {												//aux->col é igual a col
+			//ja existe a borda, insere o elemento
+		}
+		//NAO PODE FAZER SEPARADO AAAAAA	
+	}
+}
 
 /* Imprime a m formatada */
 void printMatriz (matriz *m)
@@ -77,7 +143,6 @@ void printMatriz (matriz *m)
 		
 		printf("]\n");
 	}
-	printf("\n");
 }
 
 void multiplica (matriz *m, matriz *a, matriz *b)
@@ -89,7 +154,7 @@ void multiplica (matriz *m, matriz *a, matriz *b)
 			for (int k = 0; k < b->nLins; k++)
 				soma += acesso(a, i, k)*acesso(b, k, j);
 			
-			//insertElement(sum, i, j);
+			//insertElement(i, j, sum);
 		}
 	}
 }
@@ -120,13 +185,7 @@ int main ()
 		insertElement(matrizB, lin, col, num);
 	}*/
 	
-	printf("MATRIZ A:\n");
-	printMatriz(matrizA);
-	printf("MATRIZ B:\n");
-	printMatriz(matrizB);
-	
-	
-	/*char input;
+	char input;
 	scanf("%c", &input);
 	while (!(input == 's' || input == 'S')) {
 		switch (input) {
@@ -142,14 +201,21 @@ int main ()
 			case 'm':
 				if (ca != lb) printf("ERRO\n");
 				else {
-					matriz *mult = setupMatriz(ca, lb);
-					multiplica(mult, matrizA, matrizB);
-					printMatriz(mult);
+					printf("MATRIZ MULTIMPLICADA\n");
+					//matriz *mult = setupMatriz(ca, lb);
+					//multiplica(mult, matrizA, matrizB);
+					//printMatriz(mult);
 				}
+				break;
+			case 'I':
+			case 'i':
+				scanf("%d %d %d", &lin, &col, &num);
+				insertElement(matrizA, lin, col, num);
+				printMatriz(matrizA);
 				break;
 		}
 		scanf("%c", &input);
-	}*/
+	}
 	
 	
 	return 0;
