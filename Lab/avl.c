@@ -234,13 +234,78 @@ void freeAvl (avlNode *node)
 	free(node);
 }
 
-int deleteNode(avlNode **root, int ra);
+avlNode* deleteNode(avlNode *root, int ra, int *rotacoes)
+{
+	*rotacoes = 0;
+	if (!root) return root;
+	
+	else if (ra < root->ra)
+		root->left = deleteNode(root->left, ra, rotacoes);
+	
+	else if (ra > root->ra)
+		root->right = deleteNode(root->right, ra, rotacoes);
+	
+	//Chega aqui quando root->ra == ra
+	else {
+		//caso 1: sem filhos
+		if (!root->left && !root->right) {
+			free(root);
+			root = NULL;
+		}
+		//caso 2.1: filho na direita
+		else if (!root->left) {
+			avlNode *aux = root;
+			root = root->right;
+			free(aux);
+		}
+		//caso 2.2: filho na esquerda
+		else if (!root->right) {
+			avlNode *aux = root;
+			root = root->left;
+			free(aux);
+		}
+		//caso 3: dois filhos
+		else {
+			avlNode *aux = minValue(root->right);
+			root->ra = aux->ra;
+			root->nota = aux->nota;
+			root->right = deleteNode(root->right, aux->ra, rotacoes);
+		}
+	}
+	if (!root) return root;
+	
+	updateHeight(root);
+	
+	int balance = balanceFactor(root);
+	
+	if (balance > 1 && balanceFactor(root->left) >= 0) {
+		*rotacoes = 1;
+		rotateLL(&root);
+	}
+	
+	else if (balance > 1 && balanceFactor(root->left) < 0) {
+		*rotacoes = 1;
+		rotateLR(&root);
+	}
+	
+	else if (balance < -1 && balanceFactor(root->right) <= 0) {
+		*rotacoes = 1;
+		rotateRR(&root);
+	}
+	
+	else if (balance < -1 && balanceFactor(root->right) > 0) {
+		*rotacoes = 1;
+		rotateRL(&root);
+	}
+	
+	return root;
+}
 
 int main ()
 {
 	int i = 0;
 	char input;
-	int ra, nota, comparacoes;
+	int ra, nota, comparacoes, rotacoes = 0;
 	avlNode *arvore = NULL;
 	avlNode *busca = NULL;
 	
@@ -256,7 +321,9 @@ int main ()
 			
 			case 'R':
 			case 'r':
-				if (!deleteNode(&arvore, ra))
+				scanf ("%d", &ra);
+				arvore = deleteNode(arvore, ra, &rotacoes);
+				if (!rotacoes)
 					printf("[Ja esta balanceado]\n");
 				break;
 			
@@ -291,74 +358,7 @@ int main ()
 	return 0;
 }
 
-int deleteNode(avlNode **tree, int ra)
-{
-	int rotate = 0;
-	avlNode *root = *tree;
-	if (!root) return rotate;
-	
-	else if (ra < root->ra)
-		deleteNode(&root->left, ra);
-	
-	else if (ra > root->ra)
-		deleteNode(&root->right, ra);
-	
-	//Chega aqui quando arvore->data == x
-	else {
-		//caso 1: sem filhos
-		if (!root->left && !root->right) {
-			free(root);
-			root = NULL;
-		}
-		//caso 2.1: filho na direita
-		else if (!root->left) {
-			avlNode *aux = root;
-			root = root->right;
-			free(aux);
-		}
-		//caso 2.2: filho na esquerda
-		else if (!root->right) {
-			avlNode *aux = root;
-			root = root->left;
-			free(aux);
-		}
-		//caso 3: dois filhos
-		else {
-			avlNode *aux = minValue(root->right);
-			root->ra = aux->ra;
-			root->nota = aux->nota;
-			deleteNode(&root->right, aux->ra);
-		}
-	}
-	if (!root) return rotate;
-	
-	updateHeight(root);
-	
-	int balance = balanceFactor(root);
-	
-	if (balance > 1 && balanceFactor(root->left) >= 0) {
-		rotate = 1;
-		rotateLL(&root);
-	}
-	
-	else if (balance > 1 && balanceFactor(root->left) < 0) {
-		rotate = 1;
-		rotateLR(&root);
-	}
-	
-	else if (balance < -1 && balanceFactor(root->right) <= 0) {
-		rotate = 1;
-		rotateRR(&root);
-	}
-	
-	else if (balance < -1 && balanceFactor(root->right) > 0) {
-		rotate = 1;
-		rotateRL(&root);
-	}
-	
-	*tree = root;
-	return rotate;
-}
+
 
 
 
