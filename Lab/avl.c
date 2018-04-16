@@ -234,6 +234,7 @@ void freeAvl (avlNode *node)
 	free(node);
 }
 
+/* NAO FUNCIONA EM TODOS OS TESTES, REVER */
 avlNode* deleteNode(avlNode *root, int ra, int *rotacoes)
 {
 	*rotacoes = 0;
