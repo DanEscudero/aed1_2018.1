@@ -105,14 +105,17 @@ int length (lista *lst)
 <0, se x<y */
 int comparar (lista *x, lista *y)
 {
+	if (!x && !y)
+		return 0;
+	
 	if (!x)
-		return -1;
+		return flag*(+1);
 	
 	if (!y)
-		return +1;
+		return flag*(-1);
 	
-	else
-		return flag * (x->ra - y->ra);
+	if (x && y)
+		return flag*(x->ra - y->ra);
 }
 
 lista *access(lista *head, int pos)
@@ -121,24 +124,26 @@ lista *access(lista *head, int pos)
 	
 	if (!aux) return NULL;
 	
-	for (int i = 0; i <= pos; i++) {
-		aux = aux->next;
-	}
+	for (int i = 0; i < pos; i++)
+		if (aux->next) aux = aux->next;
+	
 	return aux;
 }
 
-lista *merge (lista *head, int inicio, int meio, int fim)
+void merge (lista **ptr_head, int inicio, int meio, int fim)
 {
+	printf("[MERGE]inicio: %d meio: %d fim: %d\n", inicio, meio, fim);
+	lista *head = *ptr_head;
 	lista *novo = NULL;
+
+	int index1 = inicio;
+	lista *aux1 = access(head, index1);
 	
-	lista *aux1 = access(head, meio - inicio + 1);
-	int index1 = meio - inicio + 1;
-	
-	lista *aux2 = access(head, fim - meio);
-	int index2 = fim - meio;
-	
-	while (aux1 && aux2 && index1 <= meio && index2 <= fim) {
-		if (comparar(aux1, aux2) >= 0) {
+	int index2 = meio+1;
+	lista *aux2 = access(head, index2);
+	printf("aux1->ra: %d aux2->ra: %d\n", aux1->ra, aux2->ra);
+	while (index1 <= meio && index2 <= fim) {
+		if (aux1->ra < aux2->ra) {
 			novo = append(novo, aux1->ra, aux1->nota);
 			aux1 = aux1->next;
 			index1++;
@@ -149,26 +154,38 @@ lista *merge (lista *head, int inicio, int meio, int fim)
 			index2++;
 		}
 	}
-	
-	return novo;
+	printf("done main\n");
+	while (index1 <= meio) {
+		novo = append(novo, aux1->ra, aux1->nota);
+		aux1 = aux1->next;
+		index1++;
+	}
+	printf("done1\n");	
+	while (index2 <= fim) {
+		novo = append(novo, aux2->ra, aux2->nota);
+		aux2 = aux2->next;
+		index2++;
+	}
+	printf("done2\n");
+	*ptr_head = novo;
 }
 
-void mergesort (lista *head, int inicio, int fim)
+void mergesort (lista **head, int inicio, int fim)
 {
 	if (inicio < fim) {
-		int meio = inicio + (fim-inicio)/2;
-		
+		int meio = (fim+inicio)/2;
+		printf("[SORT]inicio: %d meio: %d fim: %d\n", inicio, meio, fim);
 		mergesort(head, inicio, meio);
 		mergesort(head, meio+1, fim);
-		head = merge(head, inicio, meio, fim);
+		merge(head, inicio, meio, fim);
 	}
 }
 
 int main() {
-    int ra, nota, len = 0, input;
+	int ra, nota, len = 0, input;
     lista *head = NULL;
 	
-    while (scanf("\n%d", &input), input) {
+	while (scanf("\n%d", &input), input) {
         switch (input) {
             case 1:
                 scanf("%d %d", &ra, &nota);
@@ -184,28 +201,40 @@ int main() {
             case 6:
 				flag = +1;
 				
-                mergesort(head, 0, len-1);
+                mergesort(&head, 0, len-1);
 				
                 printf("[LISTA]\n");
                 imprimir(head);
                 break;
 			
-            case '9':
+            case 9:
 				flag = -1;
 				
-                mergesort(head, 0, len-1);
+                mergesort(&head, 0, len-1);
 				
                 printf("[LISTA]\n");
                 imprimir(head);
                 break;
 			
 			case 5:
-				printf("len: %d\n", len-1);
+			scanf("%d", &ra);
+			printf("access: %d\n", (access(head, ra))->ra);
         }
     }
 	
     head = liberar(head);
 	
+	/*lista *lst = NULL;
+	lst = append(lst, 11, 11);
+	lst = append(lst, 22, 22);
+	lst = append(lst, 33, 33);
+	lst = append(lst, 44, 44);
+	
+	printf("[LISTA]\n");
+	imprimir(lst);
+	int a = (access(lst, 4))->ra;
+	printf("%d\n", a);*/
+		
     return 0;
 }
 
