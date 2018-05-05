@@ -162,7 +162,7 @@ lista *partition (lista *head, lista *last, lista **novoHead, lista **novoLast)
 	return pivo;
 }
 
-lista *fQuickSort (lista *head, lista *last)
+lista *QuickSort (lista *head, lista *last)
 {
 	if (!head || head == last) return head;
 	
@@ -177,22 +177,16 @@ lista *fQuickSort (lista *head, lista *last)
 			tmp = tmp->next;
 		tmp->next = NULL;
 		
-		novoHead = fQuickSort(novoHead, tmp);
+		novoHead = QuickSort(novoHead, tmp);
 		
 		//muda o next do fim da primeira metade para o pivo
 		tmp = ultimo(novoHead);
 		tmp->next = pivo;
 	}
 	
-	pivo->next = fQuickSort(pivo->next, novoLast);
+	pivo->next = QuickSort(pivo->next, novoLast);
 	
 	return novoHead;
-}
-
-/* Chama a funcao recursiva do algoritmo (fQuickSort) */
-lista *QuickSort (lista *head)
-{
-	return fQuickSort(head, ultimo(head));
 }
 
 int main() {
@@ -211,7 +205,7 @@ int main() {
 			
             case 8:
                 scanf("%d", &modoDeComparacao);
-                head = QuickSort(head);
+                head = QuickSort(head, ultimo(head));
                 printf("[O=%d]\n", modoDeComparacao);
                 imprimir(head);
                 break;
@@ -230,11 +224,3 @@ int main() {
 	
     return 0;
 }
-
-
-
-
-
-
-
-
